@@ -14,7 +14,7 @@ if [[ -z $1 ]]
       #10|Ne|Neon
       if [[ -z $ATOMIC_NUMBER_RESULT ]] 
         then
-        echo "This element number is not in the database."
+        echo "I could not find that element in the database."
       else 
         INFORMATION_QUERY_RESULT=$($PSQL "select * from elements FULL JOIN properties USING(atomic_number) full join types using(type_id) where atomic_number = $1")
         echo "$INFORMATION_QUERY_RESULT" | while read TYPE_ID BAR ATOMIC_NUMBER BAR SYMBOL BAR NAME BAR ATOMIC_MASS BAR MELTING_POINT_CELSIUS BAR BOILING_POINT_CELSIUS BAR TYPE
@@ -25,7 +25,13 @@ if [[ -z $1 ]]
       else # if is not a number
       #check if is valid symbol or name
        ATOMIC_VARCHAR_RESULT=$($PSQL "select * from elements where symbol = '$1' OR name = '$1'")
-       echo "$ATOMIC_VARCHAR_RESULT"
+        if [[ -z $ATOMIC_VARCHAR_RESULT ]] 
+        then 
+        echo "I could not find that element in the database."
+        else 
+        fi
+        
+
 
 
     fi
