@@ -16,15 +16,15 @@ if [[ -z $1 ]]
         then
         echo "This element number is not in the database."
       else 
-        INFORMATION_QUERY_RESULT=$($PSQL "select * from elements FULL JOIN properties USING(atomic_number) where atomic_number = $1")
-        echo "$INFORMATION_QUERY_RESULT" | while read ATOMIC_NUMBER BAR SYMBOL BAR NAME BAR ATOMIC_MASS BAR MELTING_POINT_CELSIUS BAR BOILING_POINT_CELSIUS BAR TYPE BAR TYPE_ID
+        INFORMATION_QUERY_RESULT=$($PSQL "select * from elements FULL JOIN properties USING(atomic_number) full join types using(type_id) where atomic_number = $1")
+        echo "$INFORMATION_QUERY_RESULT" | while read TYPE_ID BAR ATOMIC_NUMBER BAR SYMBOL BAR NAME BAR ATOMIC_MASS BAR MELTING_POINT_CELSIUS BAR BOILING_POINT_CELSIUS BAR TYPE
           do
-          echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a nonmetal, with a mass of $ATOMIC_MASS amu. $NAME has a melting point of $MELTING_POINT_CELSIUS celsius and a boiling point of $BOILING_POINT_CELSIUS celsius."
+          echo "The element with atomic number $ATOMIC_NUMBER is $NAME ($SYMBOL). It's a $TYPE, with a mass of $ATOMIC_MASS amu. $NAME has a melting point of $MELTING_POINT_CELSIUS celsius and a boiling point of $BOILING_POINT_CELSIUS celsius."
         done
       fi
       else # if is not a number
       #check if is valid symbol or name
-       ATOMIC_VARCHAR_RESULT=$($PSQL "select * from elements where symbol = '$1' OR name = '$1")
+       ATOMIC_VARCHAR_RESULT=$($PSQL "select * from elements where symbol = '$1' OR name = '$1'")
        echo "$ATOMIC_VARCHAR_RESULT"
 
 
